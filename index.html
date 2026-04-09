@@ -610,6 +610,10 @@ function initMap() {
     { maxZoom: 16, opacity: 0.6 }
   ).addTo(map);
 
+  map.createPane('hitsPane');
+  map.getPane('hitsPane').style.zIndex = '650';
+  map.getPane('hitsPane').style.pointerEvents = 'auto';
+
   eqGroup = L.layerGroup().addTo(map);
 }
 
@@ -698,9 +702,9 @@ function renderEqs() {
         </div>
       </div>`;
 
-    // Invisible hit target — fillOpacity:0.001 keeps SVG pointer events active
-    // (fillOpacity:0 = no fill = browser ignores pointer events on the interior)
+    // Invisible hit target in dedicated pane above state polygons
     const hit = L.circleMarker([eq.lat, eq.lon], {
+      pane: 'hitsPane',
       radius: Math.max(rad, 14),
       fillColor: "#ffffff", fillOpacity: 0.001,
       color: "transparent", opacity: 0, weight: 0
