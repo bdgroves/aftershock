@@ -318,7 +318,17 @@
     .pop-link a { color: var(--blue); font-size: 0.6rem; letter-spacing: 0.1em; text-decoration: none; }
     .pop-link a:hover { text-decoration: underline; }
 
-    /* ─── Scrollbar ─────────────────────────────────────────────────────────── */
+    .day-btns { display: flex; gap: 4px; margin-top: 8px; }
+    .day-btn {
+      flex: 1; padding: 4px 0; border-radius: 3px; border: 1px solid var(--border);
+      background: none; color: var(--text-3); font-size: 0.58rem;
+      letter-spacing: 0.1em; cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: all 0.15s;
+    }
+    .day-btn:hover  { border-color: var(--border-hi); color: var(--text-2); }
+    .day-btn.active { border-color: var(--red); color: var(--red); background: var(--red-dim); }
+
+
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -374,6 +384,17 @@
     <div id="map"></div>
 
     <div class="map-overlay">
+      <!-- Days filter -->
+      <div class="ov-card">
+        <div class="ov-lbl">Time Window</div>
+        <div class="day-btns">
+          <button class="day-btn" data-days="1">1D</button>
+          <button class="day-btn" data-days="3">3D</button>
+          <button class="day-btn" data-days="7">7D</button>
+          <button class="day-btn" data-days="14">14D</button>
+          <button class="day-btn active" data-days="30">30D</button>
+        </div>
+      </div>
       <!-- Magnitude filter -->
       <div class="ov-card">
         <div class="ov-lbl">Min Magnitude &nbsp;<span id="mag-disp">1.5</span></div>
@@ -446,13 +467,14 @@ const STATE_ABBR = {
 const STATES_URL = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json";
 
 // ─── State ───────────────────────────────────────────────────────────────────
-let appData     = null;
-let map         = null;
-let eqGroup     = null;
-let stateLayer  = null;
-let magChart    = null;
+let appData      = null;
+let map          = null;
+let eqGroup      = null;
+let stateLayer   = null;
+let magChart     = null;
 let selectedAbbr = null;
-let minMag      = 1.5;
+let minMag       = 1.5;
+let daysFilter   = 30;
 
 // ─── Color helpers ────────────────────────────────────────────────────────────
 function magColor(m) {
@@ -463,7 +485,6 @@ function magColor(m) {
   if (m < 6.0) return "#c92a2a";
   return "#9c27b0";
 }
-
 function magRadius(m) {
   if (m < 2.0) return 3;
   if (m < 3.0) return 5;
@@ -472,7 +493,6 @@ function magRadius(m) {
   if (m < 6.0) return 19;
   return 27;
 }
-
 function activityFill(n) {
   if (n > 400) return "rgba(210,30,30,0.50)";
   if (n > 200) return "rgba(240,80,30,0.42)";
@@ -481,20 +501,18 @@ function activityFill(n) {
   if (n > 10)  return "rgba(100,210,100,0.22)";
   return "rgba(55,90,160,0.14)";
 }
-
 function activityBorder(n) {
   if (n > 150) return "#e63946";
   if (n > 50)  return "#f4a261";
   if (n > 10)  return "#ffd16680";
   return "#1b2d47";
 }
-
 function barColor(i) {
   return ["#e63946","#f45c2a","#f4a261","#f4c261","#ffd166","#a8d86e","#56ccbe","#48cae4"][i] || "#4a5568";
 }
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
-function fmtNum(n) { return n.toLocaleString(); }
+function fmtNum(n)  { return n.toLocaleString(); }
 function fmtDate(ms) {
   return new Date(ms).toLocaleDateString("en-US", { month:"short", day:"numeric", year:"numeric" });
 }
@@ -503,6 +521,18 @@ function fmtRel(ms) {
   if (h < 1)  return `${Math.round(h * 60)}m ago`;
   if (h < 24) return `${Math.round(h)}h ago`;
   return `${Math.round(h / 24)}d ago`;
+}
+
+// ─── Filter helpers ───────────────────────────────────────────────────────────
+function cutoff() { return Date.now() - daysFilter * 86400000; }
+
+function filteredQuakes(extraFilter) {
+  const t = cutoff();
+  return appData.earthquakes.filter(e =>
+    e.mag >= minMag && e.time >= t &&
+    e.lat != null && e.lon != null &&
+    (!extraFilter || extraFilter(e))
+  );
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
@@ -515,19 +545,13 @@ async function init() {
     buildNationalPanel();
     buildRecentList();
     updateHeader();
-
-    document.getElementById("mag-filter").addEventListener("input", e => {
-      minMag = parseFloat(e.target.value);
-      document.getElementById("mag-disp").textContent = minMag.toFixed(1);
-      renderEqs();
-    });
+    wireFilters();
     document.getElementById("back-btn").addEventListener("click", showNational);
-
     document.getElementById("loading").style.display = "none";
   } catch (err) {
     document.getElementById("loading").innerHTML = `
       <div class="ld-title" style="color:#f4a261">DATA UNAVAILABLE</div>
-      <div class="ld-sub" style="margin-top:8px">Run <code style="color:#ffd166">python fetch/fetch_quakes.py</code> to generate data</div>
+      <div class="ld-sub" style="margin-top:8px">Run <code style="color:#ffd166">pixi run fetch</code> to generate data</div>
       <div class="ld-sub" style="margin-top:4px;font-size:.55rem">${err.message}</div>`;
   }
 }
@@ -538,20 +562,45 @@ async function loadData() {
   appData = await r.json();
 }
 
+// ─── Filter wiring ────────────────────────────────────────────────────────────
+function wireFilters() {
+  document.getElementById("mag-filter").addEventListener("input", e => {
+    minMag = parseFloat(e.target.value);
+    document.getElementById("mag-disp").textContent = minMag.toFixed(1);
+    onFilterChange();
+  });
+  document.querySelectorAll(".day-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".day-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      daysFilter = parseInt(btn.dataset.days);
+      onFilterChange();
+    });
+  });
+}
+
+function onFilterChange() {
+  renderEqs();
+  buildRecentList();
+  if (selectedAbbr) {
+    const stats = appData.state_stats[selectedAbbr];
+    if (stats) showStatePanel(selectedAbbr, stats);
+  }
+}
+
 // ─── Map ──────────────────────────────────────────────────────────────────────
 function initMap() {
   map = L.map("map", {
-    center: [39.0, -97.5], zoom: 4,
-    zoomControl: false, attributionControl: false
+    center: [20, 10], zoom: 2,
+    zoomControl: false, attributionControl: false,
+    worldCopyJump: true
   });
   L.control.zoom({ position: "topright" }).addTo(map);
 
-  // Dark base tiles
   L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_matter_nolabels/{z}/{x}/{y}{r}.png", {
     subdomains: "abcd", maxZoom: 18
   }).addTo(map);
 
-  // City/road label overlay at reduced opacity
   L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_matter_only_labels/{z}/{x}/{y}{r}.png", {
     subdomains: "abcd", maxZoom: 18, opacity: 0.45
   }).addTo(map);
@@ -560,7 +609,7 @@ function initMap() {
 }
 
 async function loadStates() {
-  const r = await fetch(STATES_URL);
+  const r  = await fetch(STATES_URL);
   const gj = await r.json();
 
   stateLayer = L.geoJSON(gj, {
@@ -568,13 +617,7 @@ async function loadStates() {
       const abbr  = STATE_ABBR[feat.properties.name];
       const stats = abbr && appData?.state_stats?.[abbr];
       const n     = stats ? stats.count : 0;
-      return {
-        fillColor:   activityFill(n),
-        fillOpacity: 1,
-        color:       activityBorder(n),
-        weight:      n > 0 ? 0.9 : 0.5,
-        opacity:     1
-      };
+      return { fillColor: activityFill(n), fillOpacity: 1, color: activityBorder(n), weight: n > 0 ? 0.9 : 0.5, opacity: 1 };
     },
     onEachFeature: (feat, layer) => {
       const name  = feat.properties.name;
@@ -582,64 +625,40 @@ async function loadStates() {
       const stats = abbr && appData?.state_stats?.[abbr];
 
       layer.on({
-        click: () => {
-          if (!abbr || !stats) return;
-          selectedAbbr = abbr;
-          highlightState(abbr);
-          showStatePanel(abbr, stats);
-        },
-        mouseover: e => {
-          e.target.setStyle({ weight: 2, color: "#e63946" });
-          e.target.bringToFront();
-        },
-        mouseout: e => {
-          if (STATE_ABBR[e.target.feature.properties.name] !== selectedAbbr) {
-            stateLayer.resetStyle(e.target);
-          }
-        }
+        click:     () => { if (!abbr || !stats) return; selectedAbbr = abbr; highlightState(abbr); showStatePanel(abbr, stats); },
+        mouseover: e  => { e.target.setStyle({ weight: 2, color: "#e63946" }); e.target.bringToFront(); },
+        mouseout:  e  => { if (STATE_ABBR[e.target.feature.properties.name] !== selectedAbbr) stateLayer.resetStyle(e.target); }
       });
 
-      if (stats) {
-        layer.bindTooltip(
-          `<div style="font-family:'Inter',sans-serif">
+      layer.bindTooltip(stats
+        ? `<div style="font-family:'Inter',sans-serif">
              <strong style="color:#e8edf5;font-size:.8rem">${name}</strong><br>
              <span style="color:#8fa3bc;font-size:.68rem">${fmtNum(stats.count)} events &middot; Max M${stats.max_mag}</span>
-           </div>`,
-          { sticky: true, opacity: 0.97 }
-        );
-      } else {
-        layer.bindTooltip(
-          `<span style="color:#3d5269;font-size:.7rem">${name} — no activity</span>`,
-          { sticky: true }
-        );
-      }
+           </div>`
+        : `<span style="color:#3d5269;font-size:.7rem">${name} — no activity</span>`,
+        { sticky: true, opacity: 0.97 }
+      );
     }
   }).addTo(map);
 }
 
 function highlightState(abbr) {
   stateLayer.eachLayer(l => {
-    if (STATE_ABBR[l.feature?.properties?.name] === abbr) {
-      l.setStyle({ weight: 2.5, color: "#e63946" });
-      l.bringToFront();
-    } else {
-      stateLayer.resetStyle(l);
-    }
+    STATE_ABBR[l.feature?.properties?.name] === abbr
+      ? (l.setStyle({ weight: 2.5, color: "#e63946" }), l.bringToFront())
+      : stateLayer.resetStyle(l);
   });
 }
 
 // ─── Earthquake markers ───────────────────────────────────────────────────────
 function renderEqs() {
   eqGroup.clearLayers();
-  const quakes = appData.earthquakes
-    .filter(e => e.mag >= minMag && e.lat != null && e.lon != null)
-    .sort((a, b) => a.mag - b.mag); // small first so large render on top
+  const quakes = filteredQuakes().sort((a, b) => a.mag - b.mag);
 
   quakes.forEach(eq => {
     const col = magColor(eq.mag);
     const rad = magRadius(eq.mag);
 
-    // Outer pulse ring for M4+
     if (eq.mag >= 4.0) {
       L.circleMarker([eq.lat, eq.lon], {
         radius: rad + 5, fillColor: "transparent",
@@ -648,8 +667,7 @@ function renderEqs() {
     }
 
     const cm = L.circleMarker([eq.lat, eq.lon], {
-      radius: rad,
-      fillColor: col,
+      radius: rad, fillColor: col,
       color:       eq.mag >= 4.0 ? col  : "transparent",
       weight:      eq.mag >= 4.0 ? 1    : 0,
       fillOpacity: eq.mag >= 4.0 ? 0.90 : 0.72
@@ -670,6 +688,10 @@ function renderEqs() {
 
     eqGroup.addLayer(cm);
   });
+
+  // Sync header count to visible events
+  const el = document.getElementById("hdr-count");
+  if (el) el.textContent = fmtNum(quakes.length);
 }
 
 // ─── Header ───────────────────────────────────────────────────────────────────
@@ -680,7 +702,6 @@ function updateHeader() {
   document.getElementById("hdr-states").textContent  = s.states_active;
   document.getElementById("hdr-energy").textContent  = s.hiroshima_equiv
     ? `${s.hiroshima_equiv.toLocaleString()}×` : "—";
-
   const d = new Date(appData.generated);
   document.getElementById("hdr-updated").textContent =
     `${d.toLocaleDateString("en-US",{month:"short",day:"numeric"})} ${d.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"})} UTC`;
@@ -689,26 +710,20 @@ function updateHeader() {
 // ─── National Panel ───────────────────────────────────────────────────────────
 function buildNationalPanel() {
   const sorted = Object.entries(appData.state_stats)
-    .sort((a, b) => b[1].count - a[1].count)
-    .slice(0, 9);
-
+    .sort((a, b) => b[1].count - a[1].count).slice(0, 9);
   const top = sorted[0]?.[1].count || 1;
 
-  const rows = sorted.map(([abbr, s], i) => `
-    <div class="ts-row" onclick="clickStateAbbr('${abbr}')">
-      <div class="ts-rank">${i + 1}</div>
-      <div class="ts-name">${s.name}</div>
-      <div class="ts-bar-wrap">
-        <div class="ts-bar" style="width:${((s.count/top)*100).toFixed(0)}%;background:${barColor(i)}"></div>
-      </div>
-      <div class="ts-count">${fmtNum(s.count)}</div>
-      <div class="ts-max" style="color:${magColor(s.max_mag)}">M${s.max_mag}</div>
-    </div>`).join("");
-
   document.getElementById("nat-body").innerHTML = `
-    <div class="ts-heading">Most Active States</div>
-    ${rows}
-    <div class="click-hint">↑ CLICK ANY STATE ON THE MAP</div>
+    <div class="ts-heading">Most Active States (full 30-day dataset)</div>
+    ${sorted.map(([abbr, s], i) => `
+      <div class="ts-row" onclick="clickStateAbbr('${abbr}')">
+        <div class="ts-rank">${i+1}</div>
+        <div class="ts-name">${s.name}</div>
+        <div class="ts-bar-wrap"><div class="ts-bar" style="width:${((s.count/top)*100).toFixed(0)}%;background:${barColor(i)}"></div></div>
+        <div class="ts-count">${fmtNum(s.count)}</div>
+        <div class="ts-max" style="color:${magColor(s.max_mag)}">M${s.max_mag}</div>
+      </div>`).join("")}
+    <div class="click-hint">↑ CLICK ANY STATE ON THE MAP OR LIST</div>
   `;
 }
 
@@ -726,18 +741,23 @@ function showStatePanel(abbr, stats) {
   document.getElementById("state-panel").style.display = "";
   document.getElementById("sp-name").textContent       = stats.name.toUpperCase();
 
+  // Pull live events for this state, respecting current mag + day filters
+  const stateEvents = appData.earthquakes
+    .filter(e => e.state === abbr && e.mag >= minMag && e.time >= cutoff())
+    .sort((a, b) => b.time - a.time);
+
   const dist  = stats.mag_distribution   || {};
   const ddist = stats.depth_distribution || {};
 
   document.getElementById("sp-body").innerHTML = `
     <div class="sg">
       <div class="sc">
-        <div class="sc-val" style="color:#f4a261">${fmtNum(stats.count)}</div>
-        <div class="sc-lbl">Events</div>
+        <div class="sc-val" style="color:#f4a261">${fmtNum(stateEvents.length)}</div>
+        <div class="sc-lbl">Events (filtered)</div>
       </div>
       <div class="sc">
         <div class="sc-val" style="color:#e63946">M${stats.max_mag}</div>
-        <div class="sc-lbl">Largest</div>
+        <div class="sc-lbl">Largest (30d)</div>
       </div>
       <div class="sc">
         <div class="sc-val" style="color:#2ec4b6">${stats.avg_depth} km</div>
@@ -754,7 +774,7 @@ function showStatePanel(abbr, stats) {
         <div class="sc-lbl">Shallow</div>
       </div>
       <div class="sc">
-        <div class="sc-val" style="color:#9c27b0">${fmtNum((ddist.intermediate||0) + (ddist.deep||0))}</div>
+        <div class="sc-val" style="color:#9c27b0">${fmtNum((ddist.intermediate||0)+(ddist.deep||0))}</div>
         <div class="sc-lbl">Deep</div>
       </div>
     </div>
@@ -765,32 +785,37 @@ function showStatePanel(abbr, stats) {
       <span class="lbl">When: </span>${fmtDate(stats.max_time)}
     </div>` : ""}
 
-    <div class="chart-sect-lbl">Magnitude Distribution</div>
-    <div class="chart-box">
-      <canvas id="mag-chart"></canvas>
-    </div>
+    <div class="chart-sect-lbl">Magnitude Distribution (30d)</div>
+    <div class="chart-box"><canvas id="mag-chart"></canvas></div>
 
-    ${stats.significant && stats.significant.length > 0 ? `
-    <div class="chart-sect-lbl">Significant Events (M 3+)</div>
-    ${stats.significant.slice(0,8).map(e => `
-      <div class="ev-row" style="padding:6px 0" onclick="flyTo(${e.place ? "" : ""}${JSON.stringify([])})">
-        <div class="ev-mag" style="color:${magColor(e.mag)}">M${e.mag}</div>
-        <div class="ev-info">
-          <div class="ev-place">${e.place}</div>
-          <div class="ev-meta">${fmtDate(e.time)} &middot; ${e.depth} km</div>
-        </div>
-      </div>`).join("")}` : `
-    <div style="color:var(--text-3);font-size:.67rem;margin-top:6px">No M3+ events this period.</div>`}
+    <div class="chart-sect-lbl" style="margin-top:6px">
+      Most Recent Events
+      <span style="color:var(--text-3);margin-left:5px;font-size:.52rem">
+        M≥${minMag.toFixed(1)} · last ${daysFilter}d · ${stateEvents.length} total
+      </span>
+    </div>
+    ${stateEvents.length === 0
+      ? `<div style="color:var(--text-3);font-size:.67rem;margin-top:4px">No events match current filters.</div>`
+      : stateEvents.slice(0, 20).map(e => `
+          <div class="ev-row" style="padding:6px 0" onclick="flyTo(${e.lat},${e.lon})">
+            <div class="ev-mag" style="color:${magColor(e.mag)}">M${e.mag}</div>
+            <div class="ev-info">
+              <div class="ev-place">${e.place}</div>
+              <div class="ev-meta">${fmtRel(e.time)} &middot; ${e.depth} km deep</div>
+            </div>
+          </div>`).join("")}
+    ${stateEvents.length > 20
+      ? `<div style="color:var(--text-3);font-size:.6rem;padding:6px 0 2px">…and ${stateEvents.length - 20} more events</div>`
+      : ""}
   `;
 
-  // Render magnitude distribution chart
   if (magChart) { magChart.destroy(); magChart = null; }
   const ctx = document.getElementById("mag-chart");
   if (ctx) {
     magChart = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["M1", "M2", "M3", "M4", "M5", "M6+"],
+        labels: ["M1","M2","M3","M4","M5","M6+"],
         datasets: [{
           data: [dist.M1||0, dist.M2||0, dist.M3||0, dist.M4||0, dist.M5||0, dist["M6+"]||0],
           backgroundColor: ["#51cf66","#fcc419","#ff922b","#f03e3e","#c92a2a","#9c27b0"],
@@ -801,8 +826,8 @@ function showStatePanel(abbr, stats) {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
-          x: { grid: { color: "#1b2d47" }, ticks: { color: "#8fa3bc", font: { size: 9, family: "Space Mono" } } },
-          y: { grid: { color: "#1b2d47" }, ticks: { color: "#8fa3bc", font: { size: 9, family: "Space Mono" } }, beginAtZero: true }
+          x: { grid:{color:"#1b2d47"}, ticks:{color:"#8fa3bc",font:{size:9,family:"Space Mono"}} },
+          y: { grid:{color:"#1b2d47"}, ticks:{color:"#8fa3bc",font:{size:9,family:"Space Mono"}}, beginAtZero:true }
         }
       }
     });
@@ -819,32 +844,27 @@ function showNational() {
 
 // ─── Recent significant list ──────────────────────────────────────────────────
 function buildRecentList() {
+  const floor = Math.max(minMag, 3.0);
   const sig = appData.earthquakes
-    .filter(e => e.mag >= 3.0)
+    .filter(e => e.mag >= floor && e.time >= cutoff())
     .sort((a, b) => b.time - a.time)
-    .slice(0, 25);
+    .slice(0, 30);
 
-  if (!sig.length) {
-    document.getElementById("recent-body").innerHTML =
-      `<div style="padding:12px 15px;color:var(--text-3);font-size:.68rem">No M3+ events in dataset.</div>`;
-    return;
-  }
-
-  document.getElementById("recent-body").innerHTML = sig.map(eq => `
-    <div class="ev-row" onclick="flyTo(${eq.lat}, ${eq.lon})">
-      <div class="ev-mag" style="color:${magColor(eq.mag)}">M${eq.mag}</div>
-      <div class="ev-info">
-        <div class="ev-place">${eq.place}</div>
-        <div class="ev-meta">${fmtRel(eq.time)} &middot; ${eq.state || "—"}</div>
-      </div>
-      <div class="ev-depth">${eq.depth}km</div>
-    </div>`).join("");
+  document.getElementById("recent-body").innerHTML = sig.length === 0
+    ? `<div style="padding:12px 15px;color:var(--text-3);font-size:.68rem">No M${floor}+ events in current window.</div>`
+    : sig.map(eq => `
+        <div class="ev-row" onclick="flyTo(${eq.lat},${eq.lon})">
+          <div class="ev-mag" style="color:${magColor(eq.mag)}">M${eq.mag}</div>
+          <div class="ev-info">
+            <div class="ev-place">${eq.place}</div>
+            <div class="ev-meta">${fmtRel(eq.time)} &middot; ${eq.state || "intl"}</div>
+          </div>
+          <div class="ev-depth">${eq.depth}km</div>
+        </div>`).join("");
 }
 
 function flyTo(lat, lon) {
-  if (lat != null && lon != null) {
-    map.flyTo([lat, lon], 9, { duration: 0.9 });
-  }
+  if (lat != null && lon != null) map.flyTo([lat, lon], 7, { duration: 0.9 });
 }
 
 // ─── Start ────────────────────────────────────────────────────────────────────
