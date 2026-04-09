@@ -485,12 +485,12 @@ function magColor(m) {
   return "#9c27b0";
 }
 function magRadius(m) {
-  if (m < 2.0) return 3;
-  if (m < 3.0) return 5;
-  if (m < 4.0) return 8;
-  if (m < 5.0) return 13;
-  if (m < 6.0) return 19;
-  return 27;
+  if (m < 2.0) return 5;
+  if (m < 3.0) return 7;
+  if (m < 4.0) return 10;
+  if (m < 5.0) return 14;
+  if (m < 6.0) return 20;
+  return 28;
 }
 function activityFill(n) {
   if (n > 400) return "rgba(210,30,30,0.50)";
@@ -693,6 +693,9 @@ function renderEqs() {
         </div>
       </div>
     `);
+
+    // Stop click falling through to state polygon beneath
+    cm.on('click', e => L.DomEvent.stopPropagation(e));
 
     eqGroup.addLayer(cm);
   });
