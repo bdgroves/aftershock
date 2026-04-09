@@ -664,22 +664,27 @@ function renderEqs() {
     const col = magColor(eq.mag);
     const rad = magRadius(eq.mag);
 
+    // Pulse ring for M4+
     if (eq.mag >= 4.0) {
       L.circleMarker([eq.lat, eq.lon], {
-        radius: rad + 5, fillColor: "transparent",
-        color: col, weight: 1, fillOpacity: 0, opacity: 0.4
+        radius: rad + 6, fillColor: "transparent",
+        color: col, weight: 1, fillOpacity: 0, opacity: 0.35,
+        interactive: false
       }).addTo(eqGroup);
     }
 
-    const cm = L.circleMarker([eq.lat, eq.lon], {
+    // Visual dot — interactive:false so clicks go to hit target
+    L.circleMarker([eq.lat, eq.lon], {
       radius: rad, fillColor: col,
-      color:       eq.mag >= 4.0 ? col  : "transparent",
-      weight:      eq.mag >= 4.0 ? 1    : 0,
-      fillOpacity: eq.mag >= 4.0 ? 0.90 : 0.72
-    });
+      color:       eq.mag >= 4.0 ? col : "transparent",
+      weight:      eq.mag >= 4.0 ? 1   : 0,
+      fillOpacity: eq.mag >= 4.0 ? 0.90 : 0.72,
+      interactive: false
+    }).addTo(eqGroup);
 
     const usgsUrl = `https://earthquake.usgs.gov/earthquakes/eventpage/${eq.id}`;
-    cm.bindPopup(`
+
+    const popupContent = `
       <div>
         <div class="pop-mag" style="color:${col}">M${eq.mag}</div>
         <div class="pop-place">${eq.place}</div>
@@ -691,13 +696,18 @@ function renderEqs() {
         <div class="pop-link" style="margin-top:6px">
           <a href="${usgsUrl}" target="_blank">USGS Event Page →</a>
         </div>
-      </div>
-    `);
+      </div>`;
 
-    // Stop click falling through to state polygon beneath
-    cm.on('click', e => L.DomEvent.stopPropagation(e));
-
-    eqGroup.addLayer(cm);
+    // Invisible hit target — fillOpacity:0.001 keeps SVG pointer events active
+    // (fillOpacity:0 = no fill = browser ignores pointer events on the interior)
+    const hit = L.circleMarker([eq.lat, eq.lon], {
+      radius: Math.max(rad, 14),
+      fillColor: "#ffffff", fillOpacity: 0.001,
+      color: "transparent", opacity: 0, weight: 0
+    });
+    hit.bindPopup(popupContent, { maxWidth: 260 });
+    hit.on('click', e => L.DomEvent.stopPropagation(e));
+    eqGroup.addLayer(hit);
   });
 
   // Sync header count to visible events
