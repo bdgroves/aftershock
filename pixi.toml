@@ -1,0 +1,14 @@
+[project]
+name = "aftershock"
+version = "0.1.0"
+description = "AFTERSHOCK — U.S. Seismic Activity Monitor"
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
+
+[dependencies]
+python = ">=3.11"
+requests = ">=2.31"
+
+[tasks]
+fetch = "python fetch/fetch_quakes.py"
+serve = "python -m http.server 8000"

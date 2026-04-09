@@ -1,0 +1,33 @@
+name: 🌍 AFTERSHOCK — Seismic Data Update
+
+on:
+  schedule:
+    # Every 6 hours — the earth doesn't sleep
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-seismic-data:
+    name: Fetch USGS Earthquake Data
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📡 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
+
+      - name: 🌍 Fetch seismic data from USGS ComCat
+        run: pixi run fetch
+
+      - name: 📊 Commit updated data
+        run: |
+          git config --global user.name  "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "🌍 Seismic update: $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push
