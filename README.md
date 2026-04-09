@@ -7,10 +7,10 @@
 
 [![Seismic Update](https://github.com/bdgroves/aftershock/actions/workflows/update.yml/badge.svg)](https://github.com/bdgroves/aftershock/actions/workflows/update.yml)
 ![Data](https://img.shields.io/badge/data-USGS%20Earthquake%20Hazards%20Program-e63946)
-![Update Frequency](https://img.shields.io/badge/updates-every%206%20hours-2ec4b6)
-![Min Magnitude](https://img.shields.io/badge/threshold-M%201.5%2B-f4a261)
+![Updates](https://img.shields.io/badge/updates-every%206%20hours-2ec4b6)
+![Threshold](https://img.shields.io/badge/threshold-M%201.5%2B-f4a261)
 
-**[→ Live Dashboard](https://bdgroves.github.io/aftershock)**
+**[→ Live Dashboard — brooksgroves.com/aftershock](https://brooksgroves.com/aftershock)**
 
 ---
 
@@ -18,7 +18,7 @@
 
 I grew up in Sonora, California — a Gold Rush town wedged into the western Sierra Nevada foothills of Tuolumne County, where the hills are crumpled and old and full of stories the rocks don't easily give up. The Melones Fault Zone runs right through that country. As a kid, I walked those fault scarps without knowing what they were. I just knew the land felt different there — broken in some deep, geological way, like the earth was remembering something.
 
-The 1989 Loma Prieta earthquake hit when I was young. I remember the feeling. The ground, which you spend your whole life trusting completely, decided for a few seconds that it was done being trusted.
+The 1989 Loma Prieta earthquake hit when I was young. I remember what it felt like when the ground — the thing you spend your entire life trusting completely — decided for a few seconds that it was done being trusted.
 
 AFTERSHOCK is that memory grown up and given a dashboard.
 
@@ -26,23 +26,40 @@ AFTERSHOCK is that memory grown up and given a dashboard.
 
 ## What It Does
 
-AFTERSHOCK pulls live earthquake data from the **USGS Earthquake Hazards Program** every six hours — every measurable shake, rattle, and rupture across the United States — and renders it as a dark, interactive seismic monitor. Click any state. Watch the numbers change. This is the planet, breathing.
+Every six hours, a GitHub Actions pipeline wakes up, calls the **USGS Earthquake Hazards Program ComCat API**, and pulls every measurable shake across the United States and beyond — magnitude 1.5 and up, worldwide. It writes a static JSON file. A dark, cinematic map loads it. The earth speaks. You listen.
 
-### Dashboard Features
+---
 
-- **Live Choropleth Map** — US states shaded by seismic activity level, from quiet blues to alarm reds. At a glance, you know where the earth is restless.
+## Dashboard
 
-- **Clickable State Deep-Dives** — Click any state for a full statistical breakdown: total event count, largest magnitude, average depth, magnitude distribution chart, depth classification (shallow / intermediate / deep), and a ranked list of the most significant recent events.
+### The Map
+A full world map on ESRI Dark Gray Canvas tiles. Earthquake dots are sized and colored by magnitude — tiny green pinpoints for the microseismicity, climbing through yellow, orange, red, and into deep red and purple as the energy scales up. A magnitude 7 sits on the map like a bruise.
 
-- **National Leaderboard** — The top active states ranked by event count, color-coded by intensity. Alaska is always winning this race. It is not even close.
+Click any dot. A popup opens with the magnitude, location, depth, time elapsed, and a direct link to the USGS event page. Every dot. Every earthquake.
 
-- **Hiroshima Equivalent Energy** — Total seismic energy released in the past 30 days, expressed as a multiple of the Hiroshima atomic bomb yield (~6.3 × 10¹³ J). Because scale matters, and "1.8 × 10¹⁷ joules" means nothing until you say it differently.
+### State Deep-Dives
+Click any US state — active or quiet. Active states light up in red on the choropleth. Quiet ones are cool blue. Click either way and you get a full breakdown:
 
-- **Recent Significant Events** — A live-scrolling list of M3+ events in reverse chronological order. Click any event to fly the map to its epicenter.
+- Event count for your current filter window
+- Largest magnitude in the past 30 days and where it happened
+- Average magnitude and average depth
+- Depth classification (shallow vs. deep)
+- Magnitude distribution bar chart
+- Most recent events list, sorted newest first, each with a USGS event link
 
-- **Magnitude Filter** — Slide from M1.5 background microseismicity up through major events. Watch Alaska thin out. Watch California stay busy.
+Quiet states get a different message: *"Quiet is not nothing — it may mean the fault is locked."*
 
-- **Automatic Updates** — GitHub Actions runs the Python fetch pipeline every 6 hours. The data is always within a few hours of current.
+### National Overview
+The leaderboard. Top states ranked by event count, color-coded by intensity. Alaska is always first. It is not even close.
+
+### Filters
+Two controls that wire through everything simultaneously:
+
+- **Time Window** — 1D / 3D / 7D / 14D / 30D buttons. Change the window; the map, the state panel, and the recent list all update instantly.
+- **Magnitude Slider** — drag from M1.5 up to M6.0. Watch the noise disappear. Watch the significant events remain.
+
+### Hiroshima Equivalent
+Total seismic energy released in the dataset, expressed as a multiple of the Hiroshima atomic bomb yield (~6.3 × 10¹³ joules). Because "1.8 × 10¹⁷ joules" means nothing until you say it a different way.
 
 ---
 
@@ -51,53 +68,36 @@ AFTERSHOCK pulls live earthquake data from the **USGS Earthquake Hazards Program
 ```
 USGS Earthquake Hazards Program ComCat API
               │
-              │  (Python / requests, every 6h)
+              │  Python / requests — every 6 hours
               ▼
       fetch/fetch_quakes.py
               │
-              │  (static JSON, committed to repo)
+              │  static JSON committed to repo
               ▼
        data/earthquakes.json
               │
-              │  (Leaflet.js + Chart.js, no build step)
+              │  Leaflet.js + Chart.js — no build step
               ▼
-          index.html
-              │
-              ▼
-       GitHub Pages
+          index.html  →  brooksgroves.com/aftershock
 ```
 
-The data pipeline is intentionally simple: one Python script, one JSON file, zero databases, zero servers. The entire dashboard runs as static files — the same architecture as every other project in this collection.
-
----
-
-## The Numbers Behind the Numbers
-
-| Magnitude | Energy equivalent |
-|-----------|------------------|
-| M2.0      | Small construction blast |
-| M4.0      | ~1 ton of TNT |
-| M5.0      | ~32 tons of TNT |
-| M6.0      | Hiroshima bomb |
-| M7.0      | 32 Hiroshima bombs |
-| M8.0      | 1,000 Hiroshima bombs |
-| M9.0      | 32,000 Hiroshima bombs |
-
-Each full magnitude step releases **~31.6×** more energy than the one below it. This is why a M7 feels so different from a M6, even though the numbers look close. The Richter scale is not intuitive. AFTERSHOCK tries to make it so.
+One Python script. One JSON file. Zero databases. Zero servers. The whole pipeline is auditable in an afternoon.
 
 ---
 
 ## Stack
 
-| Component      | Technology |
-|----------------|-----------|
-| Data fetch     | Python 3.11 / requests |
-| Automation     | GitHub Actions (cron: every 6h) |
-| Map            | Leaflet.js + CartoDB Dark Matter tiles |
-| State boundaries | PublicaMundi GeoJSON via CDN |
-| Charts         | Chart.js |
-| Frontend       | Vanilla HTML / CSS / JS — no frameworks |
-| Hosting        | GitHub Pages |
+| Component        | Technology |
+|------------------|-----------|
+| Data fetch       | Python 3.11 / requests |
+| Environment      | [pixi](https://prefix.dev/) |
+| Automation       | GitHub Actions (every 6 hours) |
+| Map tiles        | ESRI Dark Gray Canvas (free, no key) |
+| State boundaries | PublicaMundi US GeoJSON via CDN |
+| Map engine       | Leaflet.js |
+| Charts           | Chart.js |
+| Frontend         | Vanilla HTML / CSS / JS — no frameworks |
+| Hosting          | brooksgroves.com (GitHub Pages) |
 
 ---
 
@@ -106,13 +106,30 @@ Each full magnitude step releases **~31.6×** more energy than the one below it.
 ```bash
 git clone https://github.com/bdgroves/aftershock
 cd aftershock
-pip install requests
-python fetch/fetch_quakes.py
 
-# Then serve locally (required for Fetch API to work)
-python -m http.server 8000
+# Install environment and run the data fetch
+pixi run fetch
+
+# Serve locally (required — fetch API won't work from file://)
+pixi run serve
 # → Open http://localhost:8000
 ```
+
+---
+
+## The Numbers
+
+| Magnitude | Energy equivalent |
+|-----------|-----------------|
+| M 2.0 | Small construction blast |
+| M 4.0 | ~1 ton of TNT |
+| M 5.0 | ~32 tons of TNT |
+| M 6.0 | Hiroshima bomb |
+| M 7.0 | 32 Hiroshima bombs |
+| M 8.0 | 1,000 Hiroshima bombs |
+| M 9.0 | 32,000 Hiroshima bombs |
+
+Each full magnitude step releases ~31.6× more energy than the step below it. The Richter scale is not intuitive. AFTERSHOCK tries to make it so.
 
 ---
 
@@ -120,17 +137,19 @@ python -m http.server 8000
 
 | Project | Description |
 |---------|-------------|
-| **[PELE](https://brooksgroves.com)** | Kīlauea volcano dashboard — active episodic fountaining, built ahead of a May 2026 birthday trip to Hawaiʻi Volcanoes National Park |
+| **[PELE](https://brooksgroves.com)** | Kīlauea volcano dashboard — active episodic fountaining, built for a May 2026 birthday trip to Hawaiʻi Volcanoes National Park |
 | **[Project Kiva](https://github.com/bdgroves/project-kiva)** | Southwest archaeology remote sensing using USGS 3DEP LiDAR |
-| **[SIERRA-FLOW](https://bdgroves.github.io/sierra-streamflow)** | Sierra Nevada streamflow monitor — USGS gages on the Tuolumne, Merced, Stanislaus |
+| **[SIERRA-FLOW](https://bdgroves.github.io/sierra-streamflow)** | Sierra Nevada streamflow monitor — Tuolumne, Merced, Stanislaus watersheds |
 | **[EDGAR](https://bdgroves.github.io/EDGAR)** | Early Data & Game Analytics Report — Seattle Mariners & Tacoma Rainiers |
-| **[Rainier Snowpack Monitor](https://bdgroves.github.io)** | Glacial water equivalent tracking on Mount Rainier |
+| **[Rainier Snowpack](https://bdgroves.github.io)** | Glacial water equivalent tracking on Mount Rainier |
 
 ---
 
-## Fault Lines & Fine Print
+## Fine Print
 
-Seismic data is sourced from the [USGS Earthquake Hazards Program](https://earthquake.usgs.gov/) ComCat API and is subject to their data quality and completeness standards. Small events (M < 2.0) in lightly instrumented regions may be underreported. State attribution is parsed from USGS place strings and may miss some offshore or border events.
+Seismic data sourced from the [USGS Earthquake Hazards Program](https://earthquake.usgs.gov/) ComCat API. Small events below M2.0 may be underreported in lightly instrumented regions. State attribution is parsed from USGS place strings; offshore and territorial events may not map to a US state.
+
+The automatic update commits read: `🌍 Seismic update: YYYY-MM-DD HH:MM UTC`. When you see those appearing in the commit history, the pipeline is healthy.
 
 ---
 
