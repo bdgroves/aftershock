@@ -598,12 +598,13 @@ function initMap() {
   });
   L.control.zoom({ position: "topright" }).addTo(map);
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_matter_nolabels/{z}/{x}/{y}{r}.png", {
-    subdomains: "abcd", maxZoom: 18
+  L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png", {
+    maxZoom: 20,
+    attribution: '&copy; <a href="https://stamen.com">Stamen Design</a> &copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
   }).addTo(map);
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_matter_only_labels/{z}/{x}/{y}{r}.png", {
-    subdomains: "abcd", maxZoom: 18, opacity: 0.45
+  L.tileLayer("https://tiles.stadiamaps.com/tiles/stamen_toner_labels/{z}/{x}/{y}{r}.png", {
+    maxZoom: 20, opacity: 0.35
   }).addTo(map);
 
   eqGroup = L.layerGroup().addTo(map);
