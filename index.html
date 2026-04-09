@@ -678,6 +678,7 @@ function renderEqs() {
       fillOpacity: eq.mag >= 4.0 ? 0.90 : 0.72
     });
 
+    const usgsUrl = `https://earthquake.usgs.gov/earthquakes/eventpage/${eq.id}`;
     cm.bindPopup(`
       <div>
         <div class="pop-mag" style="color:${col}">M${eq.mag}</div>
@@ -687,7 +688,9 @@ function renderEqs() {
           <span style="color:#2ec4b6">${eq.depth} km deep</span>
         </div>
         <div class="pop-meta"><span>${fmtDate(eq.time)}</span></div>
-        ${eq.url ? `<div class="pop-link" style="margin-top:6px"><a href="${eq.url}" target="_blank">USGS Details →</a></div>` : ""}
+        <div class="pop-link" style="margin-top:6px">
+          <a href="${usgsUrl}" target="_blank">USGS Event Page →</a>
+        </div>
       </div>
     `);
 
@@ -822,6 +825,12 @@ function showStatePanel(abbr, stats) {
           <div class="ev-info">
             <div class="ev-place">${e.place}</div>
             <div class="ev-meta">${fmtRel(e.time)} &middot; ${e.depth} km deep</div>
+            <div class="ev-meta" style="margin-top:2px">
+              <a href="https://earthquake.usgs.gov/earthquakes/eventpage/${e.id}"
+                 target="_blank"
+                 style="color:#48cae4;font-size:.58rem;letter-spacing:.08em"
+                 onclick="event.stopPropagation()">USGS Event Page →</a>
+            </div>
           </div>
         </div>`).join("")}
     ${stateEvents.length > 20
