@@ -630,7 +630,7 @@ async function loadStates() {
       const stats = abbr && appData?.state_stats?.[abbr];
 
       layer.on({
-        click:     () => { if (!abbr || !stats) return; selectedAbbr = abbr; highlightState(abbr); showStatePanel(abbr, stats); },
+        click:     () => { if (!abbr) return; selectedAbbr = abbr; highlightState(abbr); showStatePanel(abbr, stats || null); },
         mouseover: e  => { e.target.setStyle({ weight: 2, color: "#e63946" }); e.target.bringToFront(); },
         mouseout:  e  => { if (STATE_ABBR[e.target.feature.properties.name] !== selectedAbbr) stateLayer.resetStyle(e.target); }
       });
@@ -733,23 +733,35 @@ function buildNationalPanel() {
 }
 
 function clickStateAbbr(abbr) {
-  const stats = appData.state_stats[abbr];
-  if (!stats) return;
   selectedAbbr = abbr;
   highlightState(abbr);
-  showStatePanel(abbr, stats);
+  showStatePanel(abbr, appData.state_stats[abbr] || null);
 }
 
 // ─── State Panel ──────────────────────────────────────────────────────────────
 function showStatePanel(abbr, stats) {
   document.getElementById("nat-panel").style.display   = "none";
   document.getElementById("state-panel").style.display = "";
-  document.getElementById("sp-name").textContent       = stats.name.toUpperCase();
 
-  // Pull live events for this state, respecting current mag + day filters
+  // Full state name from stats or our own lookup
+  const stateName = stats?.name || Object.entries(STATE_ABBR).find(([k,v]) => v === abbr)?.[0] || abbr;
+  document.getElementById("sp-name").textContent = stateName.toUpperCase();
+
+  // All events for this state in the earthquakes array, respecting filters
   const stateEvents = appData.earthquakes
     .filter(e => e.state === abbr && e.mag >= minMag && e.time >= cutoff())
     .sort((a, b) => b.time - a.time);
+
+  // If no stats at all, show a simple no-activity panel
+  if (!stats) {
+    document.getElementById("sp-body").innerHTML = `
+      <div style="color:var(--text-3);font-size:.72rem;padding:12px 0;line-height:1.7">
+        No seismic activity recorded for <strong style="color:var(--text-2)">${stateName}</strong>
+        in the past 30 days at M≥1.5.<br><br>
+        <span style="font-size:.62rem">Quiet is not nothing — it may mean the fault is locked.</span>
+      </div>`;
+    return;
+  }
 
   const dist  = stats.mag_distribution   || {};
   const ddist = stats.depth_distribution || {};
@@ -796,19 +808,22 @@ function showStatePanel(abbr, stats) {
     <div class="chart-sect-lbl" style="margin-top:6px">
       Most Recent Events
       <span style="color:var(--text-3);margin-left:5px;font-size:.52rem">
-        M≥${minMag.toFixed(1)} · last ${daysFilter}d · ${stateEvents.length} total
+        M≥${minMag.toFixed(1)} · last ${daysFilter}d · ${stateEvents.length} shown
       </span>
     </div>
-    ${stateEvents.length === 0
-      ? `<div style="color:var(--text-3);font-size:.67rem;margin-top:4px">No events match current filters.</div>`
-      : stateEvents.slice(0, 20).map(e => `
-          <div class="ev-row" style="padding:6px 0" onclick="flyTo(${e.lat},${e.lon})">
-            <div class="ev-mag" style="color:${magColor(e.mag)}">M${e.mag}</div>
-            <div class="ev-info">
-              <div class="ev-place">${e.place}</div>
-              <div class="ev-meta">${fmtRel(e.time)} &middot; ${e.depth} km deep</div>
-            </div>
-          </div>`).join("")}
+    ${stateEvents.length === 0 ? `
+      <div style="color:var(--text-3);font-size:.67rem;margin-top:6px;line-height:1.6">
+        No events match current filters.<br>
+        <span style="font-size:.6rem">Try widening the time window or lowering the magnitude threshold.</span>
+      </div>`
+    : stateEvents.slice(0, 20).map(e => `
+        <div class="ev-row" style="padding:6px 0" onclick="flyTo(${e.lat},${e.lon})">
+          <div class="ev-mag" style="color:${magColor(e.mag)}">M${e.mag}</div>
+          <div class="ev-info">
+            <div class="ev-place">${e.place}</div>
+            <div class="ev-meta">${fmtRel(e.time)} &middot; ${e.depth} km deep</div>
+          </div>
+        </div>`).join("")}
     ${stateEvents.length > 20
       ? `<div style="color:var(--text-3);font-size:.6rem;padding:6px 0 2px">…and ${stateEvents.length - 20} more events</div>`
       : ""}
