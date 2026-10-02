@@ -1,0 +1,1156 @@
+{
+ "ne_50m_admin_0_countries.geojson": {
+  "bytes": 3083490,
+  "n": 242,
+  "keys": [
+   "ABBREV",
+   "ABBREV_LEN",
+   "ADM0_A3",
+   "ADM0_A3_AR",
+   "ADM0_A3_BD",
+   "ADM0_A3_BR",
+   "ADM0_A3_CN",
+   "ADM0_A3_DE",
+   "ADM0_A3_EG",
+   "ADM0_A3_ES",
+   "ADM0_A3_FR",
+   "ADM0_A3_GB",
+   "ADM0_A3_GR",
+   "ADM0_A3_ID",
+   "ADM0_A3_IL",
+   "ADM0_A3_IN",
+   "ADM0_A3_IT",
+   "ADM0_A3_JP",
+   "ADM0_A3_KO",
+   "ADM0_A3_MA",
+   "ADM0_A3_NL",
+   "ADM0_A3_NP",
+   "ADM0_A3_PK",
+   "ADM0_A3_PL",
+   "ADM0_A3_PS",
+   "ADM0_A3_PT",
+   "ADM0_A3_RU",
+   "ADM0_A3_SA",
+   "ADM0_A3_SE",
+   "ADM0_A3_TR",
+   "ADM0_A3_TW",
+   "ADM0_A3_UA",
+   "ADM0_A3_UN",
+   "ADM0_A3_US",
+   "ADM0_A3_VN",
+   "ADM0_A3_WB",
+   "ADM0_DIF",
+   "ADM0_DIFF",
+   "ADM0_ISO",
+   "ADM0_TLC",
+   "ADMIN",
+   "BRK_A3",
+   "BRK_DIFF",
+   "BRK_GROUP",
+   "BRK_NAME",
+   "CONTINENT",
+   "ECONOMY",
+   "FCLASS_AR",
+   "FCLASS_BD",
+   "FCLASS_BR",
+   "FCLASS_CN",
+   "FCLASS_DE",
+   "FCLASS_EG",
+   "FCLASS_ES",
+   "FCLASS_FR",
+   "FCLASS_GB",
+   "FCLASS_GR",
+   "FCLASS_ID",
+   "FCLASS_IL",
+   "FCLASS_IN",
+   "FCLASS_ISO",
+   "FCLASS_IT",
+   "FCLASS_JP",
+   "FCLASS_KO",
+   "FCLASS_MA",
+   "FCLASS_NL",
+   "FCLASS_NP",
+   "FCLASS_PK",
+   "FCLASS_PL",
+   "FCLASS_PS",
+   "FCLASS_PT",
+   "FCLASS_RU",
+   "FCLASS_SA",
+   "FCLASS_SE",
+   "FCLASS_TLC",
+   "FCLASS_TR",
+   "FCLASS_TW",
+   "FCLASS_UA",
+   "FCLASS_US",
+   "FCLASS_VN"
+  ],
+  "sample": {
+   "NAME": "Zimbabwe",
+   "ISO_A2": "ZW",
+   "ISO_A2_EH": "ZW",
+   "ADM0_A3": "ZWE",
+   "REGION_UN": "Africa",
+   "SUBREGION": "Eastern Africa",
+   "CONTINENT": "Africa"
+  }
+ },
+ "ne_110m_admin_0_countries.geojson": {
+  "bytes": 838726,
+  "n": 177,
+  "keys": [
+   "ABBREV",
+   "ABBREV_LEN",
+   "ADM0_A3",
+   "ADM0_A3_AR",
+   "ADM0_A3_BD",
+   "ADM0_A3_BR",
+   "ADM0_A3_CN",
+   "ADM0_A3_DE",
+   "ADM0_A3_EG",
+   "ADM0_A3_ES",
+   "ADM0_A3_FR",
+   "ADM0_A3_GB",
+   "ADM0_A3_GR",
+   "ADM0_A3_ID",
+   "ADM0_A3_IL",
+   "ADM0_A3_IN",
+   "ADM0_A3_IT",
+   "ADM0_A3_JP",
+   "ADM0_A3_KO",
+   "ADM0_A3_MA",
+   "ADM0_A3_NL",
+   "ADM0_A3_NP",
+   "ADM0_A3_PK",
+   "ADM0_A3_PL",
+   "ADM0_A3_PS",
+   "ADM0_A3_PT",
+   "ADM0_A3_RU",
+   "ADM0_A3_SA",
+   "ADM0_A3_SE",
+   "ADM0_A3_TR",
+   "ADM0_A3_TW",
+   "ADM0_A3_UA",
+   "ADM0_A3_UN",
+   "ADM0_A3_US",
+   "ADM0_A3_VN",
+   "ADM0_A3_WB",
+   "ADM0_DIF",
+   "ADM0_DIFF",
+   "ADM0_ISO",
+   "ADM0_TLC",
+   "ADMIN",
+   "BRK_A3",
+   "BRK_DIFF",
+   "BRK_GROUP",
+   "BRK_NAME",
+   "CONTINENT",
+   "ECONOMY",
+   "FCLASS_AR",
+   "FCLASS_BD",
+   "FCLASS_BR",
+   "FCLASS_CN",
+   "FCLASS_DE",
+   "FCLASS_EG",
+   "FCLASS_ES",
+   "FCLASS_FR",
+   "FCLASS_GB",
+   "FCLASS_GR",
+   "FCLASS_ID",
+   "FCLASS_IL",
+   "FCLASS_IN",
+   "FCLASS_ISO",
+   "FCLASS_IT",
+   "FCLASS_JP",
+   "FCLASS_KO",
+   "FCLASS_MA",
+   "FCLASS_NL",
+   "FCLASS_NP",
+   "FCLASS_PK",
+   "FCLASS_PL",
+   "FCLASS_PS",
+   "FCLASS_PT",
+   "FCLASS_RU",
+   "FCLASS_SA",
+   "FCLASS_SE",
+   "FCLASS_TLC",
+   "FCLASS_TR",
+   "FCLASS_TW",
+   "FCLASS_UA",
+   "FCLASS_US",
+   "FCLASS_VN"
+  ],
+  "sample": {
+   "NAME": "Fiji",
+   "ISO_A2": "FJ",
+   "ISO_A2_EH": "FJ",
+   "ADM0_A3": "FJI",
+   "REGION_UN": "Oceania",
+   "SUBREGION": "Melanesia",
+   "CONTINENT": "Oceania"
+  }
+ },
+ "ne_50m_admin_1_states_provinces.geojson": {
+  "bytes": 2325694,
+  "n": 294,
+  "keys": [
+   "FCLASS_AR",
+   "FCLASS_BD",
+   "FCLASS_BR",
+   "FCLASS_CN",
+   "FCLASS_DE",
+   "FCLASS_EG",
+   "FCLASS_ES",
+   "FCLASS_FR",
+   "FCLASS_GB",
+   "FCLASS_GR",
+   "FCLASS_ID",
+   "FCLASS_IL",
+   "FCLASS_IN",
+   "FCLASS_ISO",
+   "FCLASS_IT",
+   "FCLASS_JP",
+   "FCLASS_KO",
+   "FCLASS_MA",
+   "FCLASS_NL",
+   "FCLASS_NP",
+   "FCLASS_PK",
+   "FCLASS_PL",
+   "FCLASS_PS",
+   "FCLASS_PT",
+   "FCLASS_RU",
+   "FCLASS_SA",
+   "FCLASS_SE",
+   "FCLASS_TLC",
+   "FCLASS_TR",
+   "FCLASS_TW",
+   "FCLASS_UA",
+   "FCLASS_US",
+   "FCLASS_VN",
+   "abbrev",
+   "adm0_a3",
+   "adm0_label",
+   "adm0_sr",
+   "adm1_code",
+   "admin",
+   "area_sqkm",
+   "check_me",
+   "code_hasc",
+   "code_local",
+   "datarank",
+   "diss_me",
+   "featurecla",
+   "fips",
+   "fips_alt",
+   "gadm_level",
+   "geonunit",
+   "gn_a1_code",
+   "gn_id",
+   "gn_level",
+   "gn_name",
+   "gn_region",
+   "gns_adm1",
+   "gns_id",
+   "gns_lang",
+   "gns_level",
+   "gns_name",
+   "gns_region",
+   "gu_a3",
+   "hasc_maybe",
+   "iso_3166_2",
+   "iso_a2",
+   "labelrank",
+   "latitude",
+   "longitude",
+   "mapcolor13",
+   "mapcolor9",
+   "max_label",
+   "min_label",
+   "min_zoom",
+   "name",
+   "name_alt",
+   "name_ar",
+   "name_bn",
+   "name_de",
+   "name_el",
+   "name_en"
+  ],
+  "sample": {
+   "name": "Western Australia",
+   "iso_a2": "AU",
+   "adm0_a3": "AUS",
+   "postal": "WA",
+   "iso_3166_2": "AU-WA"
+  }
+ },
+ "ne_10m_admin_0_countries.geojson": {
+  "bytes": 13287234,
+  "n": 258,
+  "keys": [
+   "ABBREV",
+   "ABBREV_LEN",
+   "ADM0_A3",
+   "ADM0_A3_AR",
+   "ADM0_A3_BD",
+   "ADM0_A3_BR",
+   "ADM0_A3_CN",
+   "ADM0_A3_DE",
+   "ADM0_A3_EG",
+   "ADM0_A3_ES",
+   "ADM0_A3_FR",
+   "ADM0_A3_GB",
+   "ADM0_A3_GR",
+   "ADM0_A3_ID",
+   "ADM0_A3_IL",
+   "ADM0_A3_IN",
+   "ADM0_A3_IT",
+   "ADM0_A3_JP",
+   "ADM0_A3_KO",
+   "ADM0_A3_MA",
+   "ADM0_A3_NL",
+   "ADM0_A3_NP",
+   "ADM0_A3_PK",
+   "ADM0_A3_PL",
+   "ADM0_A3_PS",
+   "ADM0_A3_PT",
+   "ADM0_A3_RU",
+   "ADM0_A3_SA",
+   "ADM0_A3_SE",
+   "ADM0_A3_TR",
+   "ADM0_A3_TW",
+   "ADM0_A3_UA",
+   "ADM0_A3_UN",
+   "ADM0_A3_US",
+   "ADM0_A3_VN",
+   "ADM0_A3_WB",
+   "ADM0_DIF",
+   "ADM0_DIFF",
+   "ADM0_ISO",
+   "ADM0_TLC",
+   "ADMIN",
+   "BRK_A3",
+   "BRK_DIFF",
+   "BRK_GROUP",
+   "BRK_NAME",
+   "CONTINENT",
+   "ECONOMY",
+   "FCLASS_AR",
+   "FCLASS_BD",
+   "FCLASS_BR",
+   "FCLASS_CN",
+   "FCLASS_DE",
+   "FCLASS_EG",
+   "FCLASS_ES",
+   "FCLASS_FR",
+   "FCLASS_GB",
+   "FCLASS_GR",
+   "FCLASS_ID",
+   "FCLASS_IL",
+   "FCLASS_IN",
+   "FCLASS_ISO",
+   "FCLASS_IT",
+   "FCLASS_JP",
+   "FCLASS_KO",
+   "FCLASS_MA",
+   "FCLASS_NL",
+   "FCLASS_NP",
+   "FCLASS_PK",
+   "FCLASS_PL",
+   "FCLASS_PS",
+   "FCLASS_PT",
+   "FCLASS_RU",
+   "FCLASS_SA",
+   "FCLASS_SE",
+   "FCLASS_TLC",
+   "FCLASS_TR",
+   "FCLASS_TW",
+   "FCLASS_UA",
+   "FCLASS_US",
+   "FCLASS_VN"
+  ],
+  "sample": {
+   "NAME": "Indonesia",
+   "ISO_A2": "ID",
+   "ISO_A2_EH": "ID",
+   "ADM0_A3": "IDN",
+   "REGION_UN": "Asia",
+   "SUBREGION": "South-Eastern Asia",
+   "CONTINENT": "Asia"
+  }
+ },
+ "global_m45_count": {
+  "2016": "7440",
+  "2017": "6372",
+  "2018": "7571",
+  "2019": "7211",
+  "2020": "6511",
+  "2021": "8959",
+  "2022": "7766",
+  "2023": "7651",
+  "2024": "6397",
+  "2025": "8558"
+ },
+ "global_m25_count": {
+  "2024": "25153",
+  "2025": "29216"
+ },
+ "conus_m25_count": {
+  "2024": "2812",
+  "2025": "2586"
+ },
+ "alaska_m25_count": {
+  "2024": "5111",
+  "2025": "6314"
+ },
+ "recent": {
+  "n": 5682,
+  "prop_keys": [
+   "alert",
+   "cdi",
+   "code",
+   "detail",
+   "dmin",
+   "felt",
+   "gap",
+   "ids",
+   "mag",
+   "magType",
+   "mmi",
+   "net",
+   "nst",
+   "place",
+   "rms",
+   "sig",
+   "sources",
+   "status",
+   "time",
+   "title",
+   "tsunami",
+   "type",
+   "types",
+   "tz",
+   "updated",
+   "url"
+  ],
+  "tails_top": [
+   [
+    "Alaska",
+    2391
+   ],
+   [
+    "CA",
+    554
+   ],
+   [
+    "Hawaii",
+    503
+   ],
+   [
+    "Puerto Rico",
+    310
+   ],
+   [
+    "Texas",
+    296
+   ],
+   [
+    "New Mexico",
+    228
+   ],
+   [
+    "Utah",
+    163
+   ],
+   [
+    "Indonesia",
+    108
+   ],
+   [
+    "Nevada",
+    104
+   ],
+   [
+    "Japan",
+    49
+   ],
+   [
+    "Colombia",
+    44
+   ],
+   [
+    "Washington",
+    39
+   ],
+   [
+    "Chile",
+    39
+   ],
+   [
+    "New Caledonia",
+    37
+   ],
+   [
+    "Papua New Guinea",
+    32
+   ],
+   [
+    "Russia",
+    31
+   ],
+   [
+    "Philippines",
+    30
+   ],
+   [
+    "Oklahoma",
+    29
+   ],
+   [
+    "Canada",
+    28
+   ],
+   [
+    "Mexico",
+    26
+   ],
+   [
+    "U.S. Virgin Islands",
+    26
+   ],
+   [
+    "Vanuatu",
+    26
+   ],
+   [
+    "Dominican Republic",
+    25
+   ],
+   [
+    "Tonga",
+    24
+   ],
+   [
+    "China",
+    24
+   ],
+   [
+    "New Zealand",
+    20
+   ],
+   [
+    "South Sandwich Islands region",
+    20
+   ],
+   [
+    "Oregon",
+    19
+   ],
+   [
+    "MX",
+    18
+   ],
+   [
+    "Solomon Islands",
+    15
+   ],
+   [
+    "Peru",
+    15
+   ],
+   [
+    "Montana",
+    15
+   ],
+   [
+    "Guam",
+    15
+   ],
+   [
+    "Fiji region",
+    14
+   ],
+   [
+    "south of the Fiji Islands",
+    13
+   ],
+   [
+    "Afghanistan",
+    13
+   ],
+   [
+    "Tennessee",
+    13
+   ],
+   [
+    "Argentina",
+    13
+   ],
+   [
+    "Wyoming",
+    12
+   ],
+   [
+    "Fiji",
+    12
+   ],
+   [
+    "Northern Mariana Islands",
+    12
+   ],
+   [
+    "Missouri",
+    11
+   ],
+   [
+    "Timor Leste",
+    11
+   ],
+   [
+    "Japan region",
+    11
+   ],
+   [
+    "Kermadec Islands region",
+    10
+   ],
+   [
+    "southern East Pacific Rise",
+    9
+   ],
+   [
+    "Guatemala",
+    8
+   ],
+   [
+    "Greece",
+    8
+   ],
+   [
+    "Taiwan",
+    8
+   ],
+   [
+    "Idaho",
+    8
+   ],
+   [
+    "Mid-Indian Ridge",
+    8
+   ],
+   [
+    "Tajikistan",
+    7
+   ],
+   [
+    "northern Mid-Atlantic Ridge",
+    6
+   ],
+   [
+    "California",
+    6
+   ],
+   [
+    "Iran",
+    5
+   ],
+   [
+    "Colorado",
+    5
+   ],
+   [
+    "Venezuela",
+    4
+   ],
+   [
+    "Costa Rica",
+    4
+   ],
+   [
+    "Balleny Islands region",
+    4
+   ],
+   [
+    "India",
+    4
+   ],
+   [
+    "Arizona",
+    4
+   ],
+   [
+    "Reykjanes Ridge",
+    4
+   ],
+   [
+    "Owen Fracture Zone region",
+    4
+   ],
+   [
+    "Somalia",
+    3
+   ],
+   [
+    "Kansas",
+    3
+   ],
+   [
+    "Iceland region",
+    3
+   ],
+   [
+    "Turkey",
+    3
+   ],
+   [
+    "Wallis and Futuna",
+    3
+   ],
+   [
+    "Kuril Islands",
+    3
+   ],
+   [
+    "southeast of the Loyalty Islands",
+    3
+   ],
+   [
+    "Saint Helena",
+    3
+   ],
+   [
+    "Ecuador",
+    3
+   ],
+   [
+    "Nepal",
+    3
+   ],
+   [
+    "Carlsberg Ridge",
+    3
+   ],
+   [
+    "south of the Kermadec Islands",
+    3
+   ],
+   [
+    "off the coast of Oregon",
+    3
+   ],
+   [
+    "Australia",
+    2
+   ],
+   [
+    "Kyrgyzstan",
+    2
+   ],
+   [
+    "West Chile Rise",
+    2
+   ],
+   [
+    "New Hampshire",
+    2
+   ],
+   [
+    "Yemen",
+    2
+   ],
+   [
+    "Arkansas",
+    2
+   ],
+   [
+    "south of Africa",
+    2
+   ],
+   [
+    "Mariana Islands region",
+    2
+   ],
+   [
+    "Pakistan",
+    2
+   ],
+   [
+    "Martinique",
+    2
+   ],
+   [
+    "Italy",
+    2
+   ],
+   [
+    "Panama",
+    2
+   ],
+   [
+    "Georgia",
+    2
+   ],
+   [
+    "Bolivia",
+    2
+   ],
+   [
+    "Svalbard and Jan Mayen",
+    2
+   ],
+   [
+    "Maryland",
+    2
+   ],
+   [
+    "Pacific-Antarctic Ridge",
+    2
+   ],
+   [
+    "El Salvador",
+    2
+   ],
+   [
+    "off the coast of Central America",
+    2
+   ],
+   [
+    "central Mid-Atlantic Ridge",
+    2
+   ],
+   [
+    "Vietnam",
+    1
+   ],
+   [
+    "Alabama",
+    1
+   ],
+   [
+    "southern Mid-Atlantic Ridge",
+    1
+   ],
+   [
+    "New York",
+    1
+   ],
+   [
+    "north of Svalbard",
+    1
+   ],
+   [
+    "northwest of the Kuril Islands",
+    1
+   ],
+   [
+    "Kazakhstan",
+    1
+   ],
+   [
+    "Libya",
+    1
+   ],
+   [
+    "North Indian Ocean",
+    1
+   ],
+   [
+    "Austria",
+    1
+   ],
+   [
+    "Louisiana",
+    1
+   ],
+   [
+    "Drake Passage",
+    1
+   ],
+   [
+    "Vanuatu region",
+    1
+   ],
+   [
+    "Spain",
+    1
+   ],
+   [
+    "North Carolina",
+    1
+   ],
+   [
+    "Socotra region",
+    1
+   ],
+   [
+    "Scotia Sea",
+    1
+   ],
+   [
+    "Poland",
+    1
+   ],
+   [
+    "Ukraine",
+    1
+   ],
+   [
+    "Minnesota",
+    1
+   ],
+   [
+    "United Kingdom",
+    1
+   ],
+   [
+    "east of the South Sandwich Islands",
+    1
+   ],
+   [
+    "Anguilla",
+    1
+   ],
+   [
+    "Bhutan",
+    1
+   ]
+  ],
+  "nets": [
+   [
+    "ak",
+    2009
+   ],
+   [
+    "us",
+    1273
+   ],
+   [
+    "tx",
+    513
+   ],
+   [
+    "hv",
+    501
+   ],
+   [
+    "pr",
+    358
+   ],
+   [
+    "nc",
+    334
+   ],
+   [
+    "ci",
+    238
+   ],
+   [
+    "uu",
+    185
+   ],
+   [
+    "nn",
+    108
+   ],
+   [
+    "uw",
+    75
+   ],
+   [
+    "ok",
+    29
+   ],
+   [
+    "nm",
+    21
+   ],
+   [
+    "av",
+    21
+   ],
+   [
+    "se",
+    9
+   ],
+   [
+    "mb",
+    8
+   ]
+  ],
+  "big": [
+   {
+    "mag": 6.6,
+    "place": "80 km ENE of Tadine, New Caledonia",
+    "alert": "green",
+    "tsunami": 0,
+    "felt": 11,
+    "sig": 678,
+    "mmi": 5.672,
+    "cdi": 6.9,
+    "magType": "mww",
+    "net": "us"
+   },
+   {
+    "mag": 6.4,
+    "place": "49 km NNE of Kainantu, Papua New Guinea",
+    "alert": "green",
+    "tsunami": 0,
+    "felt": 30,
+    "sig": 647,
+    "mmi": 5.41,
+    "cdi": 5.6,
+    "magType": "mww",
+    "net": "us"
+   },
+   {
+    "mag": 6.5,
+    "place": "177 km W of Nikolski, Alaska",
+    "alert": "green",
+    "tsunami": 1,
+    "felt": 8,
+    "sig": 653,
+    "mmi": 4.823,
+    "cdi": 3.4,
+    "magType": "mww",
+    "net": "us"
+   },
+   {
+    "mag": 6.5,
+    "place": "126 km NNE of Teluknaga, Indonesia",
+    "alert": "green",
+    "tsunami": 0,
+    "felt": 21,
+    "sig": 657,
+    "mmi": 3.013,
+    "cdi": 3.4,
+    "magType": "mww",
+    "net": "us"
+   },
+   {
+    "mag": 6.3,
+    "place": "89 km SSW of Nikolski, Alaska",
+    "alert": "green",
+    "tsunami": 1,
+    "felt": 3,
+    "sig": 612,
+    "mmi": 3.79,
+    "cdi": 5,
+    "magType": "mww",
+    "net": "us"
+   },
+   {
+    "mag": 6.2,
+    "place": "South Sandwich Islands region",
+    "alert": "green",
+    "tsunami": 0,
+    "felt": 2,
+    "sig": 592,
+    "mmi": 3.924,
+    "cdi": 2,
+    "magType": "mww",
+    "net": "us"
+   }
+  ],
+  "noplace": 0
+ },
+ "mag_hist": [
+  [
+   "other",
+   2.0,
+   4
+  ],
+  [
+   "other",
+   2.5,
+   14
+  ],
+  [
+   "other",
+   3.0,
+   32
+  ],
+  [
+   "other",
+   3.5,
+   29
+  ],
+  [
+   "other",
+   4.0,
+   325
+  ],
+  [
+   "other",
+   4.5,
+   359
+  ],
+  [
+   "other",
+   5.0,
+   131
+  ],
+  [
+   "other",
+   5.5,
+   22
+  ],
+  [
+   "other",
+   6.0,
+   2
+  ],
+  [
+   "other",
+   6.5,
+   2
+  ],
+  [
+   "us",
+   1.5,
+   2383
+  ],
+  [
+   "us",
+   2.0,
+   1249
+  ],
+  [
+   "us",
+   2.5,
+   727
+  ],
+  [
+   "us",
+   3.0,
+   246
+  ],
+  [
+   "us",
+   3.5,
+   90
+  ],
+  [
+   "us",
+   4.0,
+   38
+  ],
+  [
+   "us",
+   4.5,
+   15
+  ],
+  [
+   "us",
+   5.0,
+   12
+  ],
+  [
+   "us",
+   6.0,
+   1
+  ],
+  [
+   "us",
+   6.5,
+   1
+  ]
+ ]
+}
